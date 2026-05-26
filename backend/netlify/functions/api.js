@@ -3,10 +3,15 @@ dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 const express = require("express");
 const mongoose = require("mongoose");
-const cors = require("cors");
 const serverless = require("serverless-http");
 
 const MONGO_URI = process.env.MONGO_URI;
+
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
 
 const ticketSchema = new mongoose.Schema(
   {
@@ -51,7 +56,8 @@ const ticketSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Ticket = mongoose.models.Ticket || mongoose.model("Ticket", ticketSchema);
+const Ticket =
+  mongoose.models.Ticket || mongoose.model("Ticket", ticketSchema);
 
 const SLA_TARGETS = { urgent: 60, high: 240, medium: 1440, low: 4320 };
 
@@ -68,7 +74,9 @@ function addDerivedFields(ticket) {
     ticket.status === "resolved" || ticket.status === "closed"
       ? ticket.resolvedAt || now
       : now;
-  const ageMinutes = Math.floor((endTime - new Date(ticket.createdAt)) / 1000 / 60);
+  const ageMinutes = Math.floor(
+    (endTime - new Date(ticket.createdAt)) / 1000 / 60
+  );
   const slaBreached = ageMinutes > SLA_TARGETS[ticket.priority];
   return { ...ticket.toObject(), ageMinutes, slaBreached };
 }
@@ -79,7 +87,14 @@ function isValidTransition(current, next) {
 
 const app = express();
 
-app.use(cors({ origin: "*" }));
+app.use((req, res, next) => {
+  res.set(CORS_HEADERS);
+  if (req.method === "OPTIONS") {
+    return res.status(204).end();
+  }
+  next();
+});
+
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -111,7 +126,8 @@ app.post("/tickets", async (req, res) => {
     const { subject, description, customerEmail, priority } = req.body;
     if (!subject || !description || !customerEmail || !priority) {
       return res.status(400).json({
-        error: "Missing required fields: subject, description, customerEmail, priority",
+        error:
+          "Missing required fields: subject, description, customerEmail, priority",
       });
     }
     const ticket = new Ticket({ subject, description, customerEmail, priority });
@@ -155,7 +171,8 @@ app.patch("/tickets/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
-    if (!status) return res.status(400).json({ error: "Status field is required" });
+    if (!status)
+      return res.status(400).json({ error: "Status field is required" });
     const validStatuses = ["open", "in_progress", "resolved", "closed"];
     if (!validStatuses.includes(status))
       return res.status(400).json({ error: "Invalid status value" });
@@ -167,7 +184,8 @@ app.patch("/tickets/:id", async (req, res) => {
       });
     }
     if (status === "resolved") ticket.resolvedAt = new Date();
-    if (ticket.status === "resolved" && status !== "resolved") ticket.resolvedAt = null;
+    if (ticket.status === "resolved" && status !== "resolved")
+      ticket.resolvedAt = null;
     ticket.status = status;
     await ticket.save();
     res.json(addDerivedFields(ticket));
@@ -207,6 +225,14 @@ const handler = serverless(app);
 
 exports.handler = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false;
+
+  if (event.httpMethod === "OPTIONS") {
+    return { statusCode: 204, headers: CORS_HEADERS, body: "" };
+  }
+
   await connectDB();
-  return handler(event, context);
+  const result = await handler(event, context);
+
+  result.headers = { ...result.headers, ...CORS_HEADERS };
+  return result;
 };
