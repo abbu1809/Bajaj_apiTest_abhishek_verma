@@ -1,0 +1,135 @@
+/* TicketCard styles - clean card look, no gradients */
+
+.ticket-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+/* red left border when SLA is breached */
+.ticket-card.sla-breached {
+  border-left: 4px solid #c0392b;
+}
+
+.breach-banner {
+  background-color: #fdecea;
+  color: #c0392b;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 3px 6px;
+  border-radius: 3px;
+  margin-bottom: 8px;
+  display: inline-block;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+  gap: 8px;
+}
+
+.card-subject {
+  font-weight: bold;
+  font-size: 14px;
+  color: #222;
+  flex: 1;
+}
+
+/* priority badge colors - each priority gets a different color */
+.priority-badge {
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.priority-low {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.priority-medium {
+  background-color: #fff3e0;
+  color: #e65100;
+}
+
+.priority-high {
+  background-color: #fce4ec;
+  color: #b71c1c;
+}
+
+.priority-urgent {
+  background-color: #880e4f;
+  color: #fff;
+}
+
+.card-age {
+  color: #555;
+  margin-bottom: 4px;
+}
+
+.card-email {
+  color: #888;
+  font-size: 12px;
+  margin-bottom: 10px;
+  word-break: break-all;
+}
+
+.card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+.btn-move {
+  background-color: #2980b9;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 8px;
+  font-size: 12px;
+  width: 100%;
+  text-align: left;
+}
+
+.btn-move:hover {
+  background-color: #1a6a9a;
+}
+
+.btn-move:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.card-error {
+  color: #c0392b;
+  font-size: 11px;
+  margin-bottom: 6px;
+  background-color: #fdecea;
+  padding: 4px 6px;
+  border-radius: 3px;
+}
+
+.btn-delete {
+  background-color: transparent;
+  color: #999;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 11px;
+  width: 100%;
+}
+
+.btn-delete:hover {
+  background-color: #fdecea;
+  color: #c0392b;
+  border-color: #c0392b;
+}
