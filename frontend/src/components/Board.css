@@ -22,6 +22,27 @@
   border-radius: 6px;
   padding: 10px;
   min-height: 200px;
+  border: 2px solid transparent;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.board-column.drag-over {
+  border-color: #2980b9;
+  background-color: #eaf4fb;
+}
+
+.board-column.drop-error {
+  border-color: #c0392b;
+  background-color: #fdecea;
+  animation: shake 0.35s ease;
+}
+
+@keyframes shake {
+  0%   { transform: translateX(0); }
+  25%  { transform: translateX(-6px); }
+  50%  { transform: translateX(6px); }
+  75%  { transform: translateX(-4px); }
+  100% { transform: translateX(0); }
 }
 
 .column-header {
@@ -46,6 +67,17 @@
   padding: 1px 8px;
   font-size: 12px;
   font-weight: bold;
+}
+
+.column-drop-error {
+  background-color: #fdecea;
+  color: #c0392b;
+  font-size: 11px;
+  padding: 5px 8px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  font-weight: bold;
+  border: 1px solid #f5c6cb;
 }
 
 .column-body {

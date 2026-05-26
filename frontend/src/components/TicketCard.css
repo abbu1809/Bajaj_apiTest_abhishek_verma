@@ -5,10 +5,35 @@
   padding: 12px;
   margin-bottom: 10px;
   font-size: 13px;
+  cursor: grab;
+  user-select: none;
+  transition: opacity 0.15s, box-shadow 0.15s;
+}
+
+.ticket-card:active {
+  cursor: grabbing;
+}
+
+.ticket-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ticket-card[draggable="true"]:active {
+  opacity: 0.6;
 }
 
 .ticket-card.sla-breached {
   border-left: 4px solid #c0392b;
+}
+
+.ticket-card.snap-back {
+  animation: snap 0.3s ease;
+}
+
+@keyframes snap {
+  0%   { transform: translateX(10px); }
+  50%  { transform: translateX(-6px); }
+  100% { transform: translateX(0); }
 }
 
 .breach-banner {
@@ -37,7 +62,6 @@
   flex: 1;
 }
 
-/* priority badge colors - each priority gets a different color */
 .priority-badge {
   font-size: 10px;
   font-weight: bold;
