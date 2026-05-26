@@ -1,0 +1,11 @@
+{
+  "name": "deskflow-api-function",
+  "version": "1.0.0",
+  "description": "Self-contained Netlify function for DeskFlow API",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mongoose": "^8.3.4",
+    "serverless-http": "^3.2.0"
+  }
+}
