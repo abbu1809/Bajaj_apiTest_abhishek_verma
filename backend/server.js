@@ -1,8 +1,3 @@
-// main entry point - this is where the server starts
-// i learned this from express docs and some youtube tutorials
-
-// fix: college/ISP DNS blocks mongodb SRV lookup, so we force Google's DNS
-// found this solution on stackoverflow after hours of debugging lol
 const dns = require("dns");
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
@@ -14,7 +9,6 @@ require("dotenv").config();
 const ticketRoutes = require("./routes/ticketRoutes");
 
 const app = express();
-
 
 app.use(cors());
 app.use(express.json());

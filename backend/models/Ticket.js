@@ -1,6 +1,3 @@
-// ticket model - defines the structure of a ticket in mongodb
-// using mongoose to make things easier with the schema
-
 const mongoose = require("mongoose");
 
 const ticketSchema = new mongoose.Schema(
@@ -10,22 +7,18 @@ const ticketSchema = new mongoose.Schema(
       required: [true, "Subject is required"],
       trim: true,
     },
-
     description: {
       type: String,
       required: [true, "Description is required"],
       trim: true,
     },
-
     customerEmail: {
       type: String,
       required: [true, "Customer email is required"],
-      // basic email validation using regex
       match: [/^\S+@\S+\.\S+$/, "Please enter a valid email address"],
       trim: true,
       lowercase: true,
     },
-
     priority: {
       type: String,
       required: [true, "Priority is required"],
@@ -34,7 +27,6 @@ const ticketSchema = new mongoose.Schema(
         message: "Priority must be one of: low, medium, high, urgent",
       },
     },
-
     status: {
       type: String,
       enum: {
@@ -43,14 +35,12 @@ const ticketSchema = new mongoose.Schema(
       },
       default: "open",
     },
-
     resolvedAt: {
       type: Date,
       default: null,
     },
   },
   {
-
     timestamps: true,
   }
 );

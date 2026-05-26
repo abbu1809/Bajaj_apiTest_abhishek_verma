@@ -14,7 +14,6 @@ function Filters({ filters, onChange }) {
     <div className="filters-bar">
       <span className="filters-label">Filters:</span>
 
-      {/* filter by priority */}
       <div className="filter-group">
         <label htmlFor="filter-priority">Priority</label>
         <select
@@ -31,7 +30,6 @@ function Filters({ filters, onChange }) {
         </select>
       </div>
 
-      {/* show only SLA breached tickets */}
       <div className="filter-group filter-checkbox">
         <label htmlFor="filter-breached">
           <input
@@ -45,7 +43,6 @@ function Filters({ filters, onChange }) {
         </label>
       </div>
 
-      {/* clear all filters button */}
       {(filters.priority || filters.breached) && (
         <button
           className="btn-clear-filters"

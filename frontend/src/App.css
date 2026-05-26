@@ -1,11 +1,8 @@
-/* App.css - main layout styles for the whole page */
-
 .app {
   min-height: 100vh;
   background-color: #f5f5f5;
 }
 
-/* top header bar */
 .app-header {
   background-color: #2c3e50;
   color: #fff;
@@ -46,14 +43,12 @@
   background-color: #1e8449;
 }
 
-/* main content area below header */
 .app-main {
   padding: 20px 24px;
   max-width: 1400px;
   margin: 0 auto;
 }
 
-/* loading and error messages */
 .loading-message {
   text-align: center;
   color: #888;

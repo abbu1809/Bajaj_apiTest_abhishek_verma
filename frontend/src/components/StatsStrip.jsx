@@ -1,6 +1,3 @@
-// StatsStrip.jsx - shows totals per status and breached count
-// sits at the top of the page, fetched from /tickets/stats
-
 import React from "react";
 import "./StatsStrip.css";
 

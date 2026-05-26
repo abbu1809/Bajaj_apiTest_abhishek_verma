@@ -1,10 +1,6 @@
-// TicketCard.jsx - shows a single ticket in the board column
-// has priority badge, age, SLA breach indicator, and move buttons
-
 import React, { useState } from "react";
 import "./TicketCard.css";
 
-// helper to format minutes into "Xh Ym" string
 function formatAge(minutes) {
   if (minutes < 60) return `${minutes}m`;
   const hrs = Math.floor(minutes / 60);
@@ -13,8 +9,6 @@ function formatAge(minutes) {
   return `${hrs}h ${mins}m`;
 }
 
-// what buttons to show per status
-// only adjacent valid moves are shown - invalid ones are hidden
 const NEXT_ACTIONS = {
   open: [{ label: "Move to In Progress", status: "in_progress" }],
   in_progress: [
@@ -25,10 +19,10 @@ const NEXT_ACTIONS = {
     { label: "Move Back to In Progress", status: "in_progress" },
     { label: "Close Ticket", status: "closed" },
   ],
-  closed: [], // closed tickets cant be moved anywhere
+  closed: [],
 };
 
-function TicketCard({ ticket, onMove, onDelete }) {
+function TicketCard({ ticket, onMove, onDelete, onDragStart }) {
   const [moving, setMoving] = useState(false);
   const [moveError, setMoveError] = useState("");
 
@@ -56,14 +50,30 @@ function TicketCard({ ticket, onMove, onDelete }) {
     }
   }
 
+  function handleDragStart(e) {
+    e.dataTransfer.setData("ticketId", ticket._id);
+    e.dataTransfer.setData("currentStatus", ticket.status);
+    e.dataTransfer.effectAllowed = "move";
+    if (onDragStart) onDragStart(ticket._id);
+  }
+
+  function showSnapError(message) {
+    setMoveError(message);
+    setTimeout(() => setMoveError(""), 2500);
+  }
+
   return (
-    <div className={`ticket-card ${ticket.slaBreached ? "sla-breached" : ""}`}>
-      {/* SLA breach warning at top of card */}
+    <div
+      className={`ticket-card ${ticket.slaBreached ? "sla-breached" : ""} ${moveError ? "snap-back" : ""}`}
+      draggable="true"
+      onDragStart={handleDragStart}
+      data-ticket-id={ticket._id}
+      data-error-setter="true"
+    >
       {ticket.slaBreached && (
         <div className="breach-banner">⚠ SLA Breached</div>
       )}
 
-      {/* subject and priority badge */}
       <div className="card-header">
         <span className="card-subject">{ticket.subject}</span>
         <span className={`priority-badge priority-${ticket.priority}`}>
@@ -71,13 +81,9 @@ function TicketCard({ ticket, onMove, onDelete }) {
         </span>
       </div>
 
-      {/* age of ticket */}
       <div className="card-age">Age: {formatAge(ticket.ageMinutes)}</div>
-
-      {/* customer email in small text */}
       <div className="card-email">{ticket.customerEmail}</div>
 
-      {/* action buttons - only shows allowed transitions */}
       {actions.length > 0 && (
         <div className="card-actions">
           {actions.map((action) => (
@@ -93,10 +99,8 @@ function TicketCard({ ticket, onMove, onDelete }) {
         </div>
       )}
 
-      {/* show error if a move failed */}
       {moveError && <div className="card-error">{moveError}</div>}
 
-      {/* delete button */}
       <button className="btn-delete" onClick={handleDelete}>
         Delete
       </button>
